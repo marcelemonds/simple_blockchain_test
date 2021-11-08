@@ -23,6 +23,7 @@ class Block {
 |  with functions to support:                          |
 |     - addBlock()                                     |
 |     - createGenesisBlock()                           |
+|     - getLatestBlock()                               |
 |  ====================================================*/
 class Blockchain {
     constructor() {
@@ -34,9 +35,15 @@ class Blockchain {
     return new Block('Genesis Block');
   }
 
+  getLatestBlock() {
+    return this.chain[this.chain.length-1];
+  }
+
   addBlock(newBlock) {
+    newBlock.height = this.chain.length;
+    newBlock.timeStamp = new Date().getTime().toString().slice(0,-3);
     if (this.chain.length>0) {
-      newBlock.previousBlockHash = this.chain[this.chain.length-1].hash;
+      newBlock.previousBlockHash = this.getLatestBlock().hash;
     }
     newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
     this.chain.push(newBlock);
